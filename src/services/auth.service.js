@@ -67,38 +67,21 @@ class AuthService {
         }
     }
 
-    static async loginUser(email, password, res) {
-        try {
-            if (!email || !password) {
-                throw new Error('Chưa nhập đủ thông tin')
-            }
+    static async loginUser(email, password) {
+        if (!email || !password) throw new Error('Chưa nhập đủ thông tin');
 
-            const user = await userModel.findOne({ email: email })
-            if (!user) {
-                throw new Error('Email chưa được đăng ký')
-            }
+        const user = await userModel.findOne({ email });
+        if (!user) throw new Error('Email chưa được đăng ký');
 
-            const validPassword = await bcrypt.compare(password, user.password)
-            if (!validPassword) {
-                throw new Error('Sai mật khẩu')
-            }
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) throw new Error('Sai mật khẩu');
 
-            if (user && validPassword) {
-                const accessToken = await AuthService.generateAccessToken(user)
-                const refreshToken = await AuthService.generateRefreshToken(user)
-                res.cookie("refreshToken", refreshToken, {
-                    httpOnly: true,
-                    secure: false,
-                    path: "/",
-                    samSite: "strict"
-                })
-                const { password, ...others } = user._doc
-                // console.log(refreshToken)
-                return { ...others, accessToken }
-            }
-        } catch (error) {
-            throw error;
-        }
+        const accessToken = await AuthService.generateAccessToken(user);
+        const refreshToken = await AuthService.generateRefreshToken(user);
+
+        const { password: pwd, ...userData } = user._doc;
+
+        return { userData: { ...userData, accessToken }, refreshToken };
     }
 }
 

@@ -95,15 +95,15 @@ class productController {
         const cacheKey = `products:${qCategory}:${page}:${limit}:${search}:${sex}:${brand}:${country}:${sortField}:${priceFrom}:${priceTo}`;
 
         try {
-            const cachedData = await redisClient.get(cacheKey);
+            // const cachedData = await redisClient.get(cacheKey);
 
-            if (cachedData) {
-                return res.send(JSON.parse(cachedData));
-            }
+            // if (cachedData) {
+            //     return res.send(JSON.parse(cachedData));
+            // }
 
             const allProduct = await ProductService.getProduct(page, limit, qCategory, search, sex, brand, country, sortField, priceFrom, priceTo);
 
-            await redisClient.setEx(cacheKey, 3600, JSON.stringify(allProduct));
+            // await redisClient.setEx(cacheKey, 3600, JSON.stringify(allProduct));
 
             return res.send(allProduct);
         } catch (error) {

@@ -13,13 +13,21 @@ class authController {
     }
 
     loginUser = async (req, res) => {
-        const { email, password } = req.body
+        const { email, password } = req.body;
         try {
-            const result = await AuthService.loginUser(email, password, res)
-            // console.log('req.cookies.refreshToken', cookies.refreshToken)
-            return res.send(result)
+            const { userData, refreshToken } = await AuthService.loginUser(email, password);
+
+            // set cookie ở đây
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: false, // chuyển true nếu dùng https
+                path: "/",
+                sameSite: "strict"
+            });
+
+            return res.json({ ...userData });
         } catch (error) {
-            return res.status(400).json({ error: error.message })
+            return res.status(400).json({ error: error.message });
         }
     }
 
