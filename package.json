@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "SET NODE_ENV=development&&nodemon index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "qc": "SET NODE_ENV=qc&&nodemon index.js",
     "prod": "SET NODE_ENV=production&&nodemon index.js"
   },
@@ -18,6 +18,7 @@
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^10.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "graphql": "^16.9.0",
