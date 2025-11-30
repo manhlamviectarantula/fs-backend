@@ -6,9 +6,17 @@ const cookieParser = require('cookie-parser')
 const swaggerSetup = require('../swagger.js'); 
 
 app.use(cors({
-    origin: "http://localhost:4000",  // FE của bạn
-    credentials: true,                // Cho phép cookie
+    origin: function (origin, callback) {
+        const allowedOrigins = process.env.CORS_ORIGIN.split(",");
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
 }));
+
 app.use(cookieParser())
 app.use(express.json())
 app.use(bodyParser.json())
